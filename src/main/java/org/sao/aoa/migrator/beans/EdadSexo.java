@@ -54,4 +54,14 @@ public class EdadSexo {
     public Integer getCantidad() {
         return cantidad;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("EdadSexo{");
+        sb.append("id98=").append(id98);
+        sb.append(", claseId=").append(claseId);
+        sb.append(", cantidad=").append(cantidad);
+        sb.append('}');
+        return sb.toString();
+    }
 }

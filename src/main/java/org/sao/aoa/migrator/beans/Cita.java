@@ -154,4 +154,32 @@ public class Cita {
     public Boolean isFoto() {
         return foto;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Cita{");
+        sb.append("id98=").append(id98);
+        sb.append(", fecha=").append(fecha);
+        sb.append(", cantidad=").append(cantidad);
+        sb.append(", observaciones='").append(observaciones).append('\'');
+        sb.append(", seleccionada=").append(seleccionada);
+        sb.append(", lugarId=").append(lugarId);
+        sb.append(", rareza=").append(rareza);
+        sb.append(", observadorId=").append(observadorId);
+        sb.append(", claseReproduccionId=").append(claseReproduccionId);
+        sb.append(", fuente=").append(fuente);
+        sb.append(", habitatRaro=").append(habitatRaro);
+        sb.append(", criaEnHabitatRaro=").append(criaEnHabitatRaro);
+        sb.append(", herido=").append(herido);
+        sb.append(", comportamientoRaro=").append(comportamientoRaro);
+        sb.append(", especieId=").append(especieId);
+        sb.append(", criterioSeleccionId=").append(criterioSeleccionId);
+        sb.append(", activo=").append(activo);
+        sb.append(", importanciaCitaId=").append(importanciaCitaId);
+        sb.append(", estudioId=").append(estudioId);
+        sb.append(", privacidadId=").append(privacidadId);
+        sb.append(", foto=").append(foto);
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -1,17 +1,13 @@
 package org.sao.aoa.migrator.services;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import com.google.inject.Inject;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
+import org.sao.aoa.migrator.readers.ExcelReaderInterface;
 
-import java.io.*;
-import java.util.Iterator;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class MigrationService
@@ -21,43 +17,56 @@ import java.util.Iterator;
  */
 public class MigrationService implements MigrationServiceInterface {
 
+    private ExcelReaderInterface reader;
+
+    @Inject
+    public MigrationService(ExcelReaderInterface reader) {
+        this.reader = reader;
+    }
+
     @Override
     public void run(String citasFilename, String edadSexoCantidadFilename, String colaboradoresFilename)
             throws IOException {
 
-        try (InputStream citasInputStream = new FileInputStream(new File(citasFilename))) {
+        /*
+         * Read files
+         */
+        // Read citas file
+        List<Map> citasData = reader.read(citasFilename);
+        // Read edad-sexo file
+        List<Map> edadSexoData = reader.read(edadSexoCantidadFilename);
+        // Read colaboradores file
+        List<Map> colaboradoresData = reader.read(colaboradoresFilename);
 
-            // Create Workbook instance holding reference to .xls file
-            POIFSFileSystem fs = new POIFSFileSystem(citasInputStream);
-            Workbook wb = new HSSFWorkbook(fs);
+        // Define database connection
+        // Create it from ad-hoc arguments
+        DSLContext create = DSL.using(connection, dialect);
 
-            // Get first/desired sheet from the workbook
-            Sheet sheet = wb.getSheetAt(0);
+        // Add a new field called "id_98" to the table Cita
 
-            // Iterate through each rows one by one
-            Iterator<Row> rowIterator = sheet.iterator();
-            while (rowIterator.hasNext())
-            {
-                Row row = rowIterator.next();
-                // For each row, iterate through all the columns
-                Iterator<Cell> cellIterator = row.cellIterator();
+        // Loop citas data
 
-                while (cellIterator.hasNext())
-                {
-                    Cell cell = cellIterator.next();
-                    //Check the cell type and format accordingly
-                    switch (cell.getCellType())
-                    {
-                        case Cell.CELL_TYPE_NUMERIC:
-                            System.out.print(cell.getNumericCellValue() + "t");
-                            break;
-                        case Cell.CELL_TYPE_STRING:
-                            System.out.print(cell.getStringCellValue() + "t");
-                            break;
-                    }
-                }
-                System.out.println("");
-            }
-        }
+            // Constructs beans using files data
+
+            // Insert data in cita table
+
+        // Get citas with "id_98" field not empty and save in a Map object using "id_98" as key and "id" as value
+
+        // Loop edad-sexo data
+
+            // Constructs beans using files data
+
+            // Replace "id_98" id using value of "id"
+
+            // Insert data in aso_cita_clase_edad_sexo table
+
+        // Loop colaboradores data
+
+            // Constructs beans using files data
+
+            // Replace "id_98" id using value of "id"
+
+            // Insert data in aso_cita_observador table
+
     }
 }

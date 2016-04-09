@@ -1,4 +1,4 @@
-package org.sao.aoa.readers;
+package org.sao.aoa.migrator.readers;
 
 import java.io.IOException;
 import java.util.List;

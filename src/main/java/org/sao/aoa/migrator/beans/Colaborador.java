@@ -50,4 +50,13 @@ public class Colaborador {
     public Integer getColaboradorId() {
         return colaboradorId;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Colaborador{");
+        sb.append("id98=").append(id98);
+        sb.append(", colaboradorId=").append(colaboradorId);
+        sb.append('}');
+        return sb.toString();
+    }
 }

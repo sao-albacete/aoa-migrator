@@ -1,4 +1,4 @@
-package org.sao.aoa.readers;
+package org.sao.aoa.migrator.readers;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;

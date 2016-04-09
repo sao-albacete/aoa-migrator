@@ -1,9 +1,12 @@
 package org.sao.aoa.migrator;
 
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.apache.commons.cli.*;
-
-import java.io.OutputStream;
+import org.sao.aoa.migrator.services.MigrationService;
+import org.sao.aoa.migrator.services.MigrationServiceInterface;
+import org.sao.aoa.migrator.services.modules.MigrationModule;
 
 /**
  * Class Run
@@ -34,6 +37,7 @@ public class Run {
                 return;
             }
 
+            // Get filenames
             String citasFilename =  cli.getOptionValue("citas");
             if (citasFilename == null){
                 throw new ParseException("El nombre del fichero de citas es obligatorio");
@@ -46,6 +50,11 @@ public class Run {
             if (colaboradoresFilename == null){
                 throw new ParseException("El nombre del fichero de colaboradores de cada cita es obligatorio");
             }
+
+            // Run migration
+            Injector injector = Guice.createInjector(new MigrationModule());
+            MigrationServiceInterface migrator = injector.getInstance(MigrationService.class);
+            migrator.run(citasFilename, edadSexoCantidadFilename, colaboradoresFilename);
 
         } catch (ParseException e) {
             System.err.println(e.getMessage());
