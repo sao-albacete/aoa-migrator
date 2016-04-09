@@ -1,5 +1,9 @@
 package org.sao.aoa.migrator.beans;
 
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Properties;
+
 /**
  * Class EdadSexo
  *
@@ -8,31 +12,46 @@ package org.sao.aoa.migrator.beans;
  */
 public class EdadSexo {
 
-    private int id98;
-    private int claseId;
-    private int cantidad;
+    private Integer id98;
+    private Integer claseId;
+    private Integer cantidad;
 
-    public int getId98() {
+    public EdadSexo(Map<String, Object> values) throws Exception {
+
+        if (values == null || values.isEmpty()) {
+            return;
+        }
+
+        // Load edad-sexo fields mapping properties
+        Properties fieldsMapping = new Properties();
+        fieldsMapping.load(this.getClass().getResourceAsStream("/mapping/edad-sexo-fields-mapping.properties"));
+
+        Class edadSexo = this.getClass();
+
+        for (Object key : fieldsMapping.keySet()) {
+            String fieldName = (String)key;
+            String mapKey = fieldsMapping.getProperty(fieldName);
+
+            if (values.containsKey(mapKey)) {
+                Field field = edadSexo.getDeclaredField(fieldName);
+                String fieldValue = (String)values.get(mapKey);
+
+                if (field.getType() == Integer.class) {
+                    field.set(this, Integer.valueOf(fieldValue));
+                }
+            }
+        }
+    }
+
+    public Integer getId98() {
         return id98;
     }
 
-    public void setId98(int id98) {
-        this.id98 = id98;
-    }
-
-    public int getClaseId() {
+    public Integer getClaseId() {
         return claseId;
     }
 
-    public void setClaseId(int claseId) {
-        this.claseId = claseId;
-    }
-
-    public int getCantidad() {
+    public Integer getCantidad() {
         return cantidad;
-    }
-
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
     }
 }

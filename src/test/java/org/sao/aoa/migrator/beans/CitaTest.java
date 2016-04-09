@@ -1,6 +1,5 @@
 package org.sao.aoa.migrator.beans;
 
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +17,7 @@ import java.util.Map;
  */
 public class CitaTest {
 
-    Map<String, Object> data;
+    private Map<String, Object> data;
     private DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Before
@@ -56,7 +55,7 @@ public class CitaTest {
         Assert.assertEquals(cita.getId98(), Integer.valueOf((String)this.data.get("id_98")));
         Assert.assertEquals(cita.getFecha(), LocalDate.parse((String)this.data.get("FECHA"), this.dateFormat));
         Assert.assertEquals(cita.getCantidad(), Integer.valueOf((String)this.data.get("num")));
-        Assert.assertEquals(cita.getObservaciones(), (String)this.data.get("OBSERVACIO"));
+        Assert.assertEquals(cita.getObservaciones(), this.data.get("OBSERVACIO"));
         Assert.assertEquals(cita.isSeleccionada(), Boolean.valueOf((String)this.data.get("selecc")));
         Assert.assertEquals(cita.getLugarId(), Integer.valueOf((String)this.data.get("id_lugarAOA")));
         Assert.assertEquals(cita.isRareza(), Boolean.valueOf((String)this.data.get("rareza")));
