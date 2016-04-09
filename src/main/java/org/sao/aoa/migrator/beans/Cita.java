@@ -1,8 +1,10 @@
 package org.sao.aoa.migrator.beans;
 
-import java.util.Date;
+import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.Set;
+import java.util.Properties;
 
 /**
  * Class Cita
@@ -12,8 +14,10 @@ import java.util.Set;
  */
 public class Cita {
 
+    private DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     private Integer id98;
-    private Date fecha;
+    private LocalDate fecha;
     private Integer cantidad;
     private String observaciones;
     private Boolean seleccionada;
@@ -41,79 +45,28 @@ public class Cita {
         }
 
         // Load cita fields mapping properties
-//        Properties fieldsMapping = new Properties();
-//        FileInputStream fis = new FileInputStream("/mapping/cita-fields-mapping.properties");
-//        fieldsMapping.load(fis);
+        Properties fieldsMapping = new Properties();
+        fieldsMapping.load(this.getClass().getResourceAsStream("/mapping/cita-fields-mapping.properties"));
 
-        Set<String> keys = values.keySet();
-        for (String key : keys) {
-            switch (key) {
-                case "id_98":
-                    id98 = (Integer)values.get(key);
-                    break;
-                case "FECHA":
-                    // TODO parse date
-                    fecha = (Date)values.get(key);
-                    break;
-                case "num":
-                    cantidad = (Integer) values.get(key);
-                    break;
-                case "OBSERVACIO":
-                    observaciones = (String) values.get(key);
-                    break;
-                case "selecc":
-                    seleccionada = (Boolean) values.get(key);
-                    break;
-                case "id_lugarAOA":
-                    lugarId = (Integer) values.get(key);
-                    break;
-                case "rareza":
-                    rareza = (Boolean) values.get(key);
-                    break;
-                case "obs_princ_id":
-                    observadorId = (Integer) values.get(key);
-                    break;
-                case "repro":
-                    claseReproduccionId = (Integer) values.get(key);
-                    break;
-                case "fuente":
-                    fuente = (Integer) values.get(key);
-                    break;
-                case "hab_raro":
-                    habitatRaro = (Boolean) values.get(key);
-                    break;
-                case "cria_hab":
-                    criaEnHabitatRaro = (Boolean) values.get(key);
-                    break;
-                case "herido":
-                    herido = (Boolean) values.get(key);
-                    break;
-                case "comport":
-                    comportamientoRaro = (Boolean) values.get(key);
-                    break;
-                case "id_sps":
-                    especieId = (Integer) values.get(key);
-                    break;
-                case "criterio_sel":
-                    criterioSeleccionId = (Integer) values.get(key);
-                    break;
-                case "activo":
-                    activo = (Boolean) values.get(key);
-                    break;
-                case "importancia":
-                    importanciaCitaId = (Integer) values.get(key);
-                    break;
-                case "estudio":
-                    estudioId = (Integer) values.get(key);
-                    break;
-                case "privaci":
-                    privacidadId = (Integer) values.get(key);
-                    break;
-                case "foto":
-                    foto = (Boolean) values.get(key);
-                    break;
-                default:
-                    throw new Exception("Fiels mapping not found");
+        Class cita = this.getClass();
+
+        for (Object key : fieldsMapping.keySet()) {
+            String fieldName = (String)key;
+            String mapKey = fieldsMapping.getProperty(fieldName);
+
+            if (values.containsKey(mapKey)) {
+                Field field = cita.getDeclaredField(fieldName);
+                String fieldValue = (String)values.get(mapKey);
+
+                if (field.getType() == Integer.class) {
+                    field.set(this, Integer.valueOf(fieldValue));
+                } else if (field.getType() == String.class) {
+                    field.set(this, fieldValue);
+                } else if (field.getType() == LocalDate.class) {
+                    field.set(this, LocalDate.parse(fieldValue, this.dateFormat));
+                } else if (field.getType() == Boolean.class) {
+                    field.set(this, Boolean.valueOf(fieldValue));
+                }
             }
         }
     }
@@ -122,7 +75,7 @@ public class Cita {
         return id98;
     }
 
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 

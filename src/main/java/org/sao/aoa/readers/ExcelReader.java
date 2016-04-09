@@ -91,20 +91,7 @@ public class ExcelReader implements ExcelReaderInterface {
         for (int i = 0; cellIterator.hasNext(); i++)
         {
             Cell cell = cellIterator.next();
-            // Check the cell type and format accordingly
-            switch (cell.getCellType())
-            {
-                case Cell.CELL_TYPE_NUMERIC:
-                    values.put(header.get(i), cell.getNumericCellValue());
-                    break;
-                case Cell.CELL_TYPE_BOOLEAN:
-                    values.put(header.get(i), cell.getBooleanCellValue());
-                    break;
-                case Cell.CELL_TYPE_STRING:
-                case Cell.CELL_TYPE_BLANK:
-                default:
-                    values.put(header.get(i), cell.getStringCellValue());
-            }
+            values.put(header.get(i), cell.getStringCellValue());
         }
 
         return values;
