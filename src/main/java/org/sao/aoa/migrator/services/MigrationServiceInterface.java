@@ -1,6 +1,7 @@
 package org.sao.aoa.migrator.services;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * Interface MigrationServiceInterface
@@ -10,6 +11,6 @@ import java.io.IOException;
  */
 public interface MigrationServiceInterface {
 
-    void run(String citasFilename, String edadSexoCantidadFilename, String colaboradoresFilename)
-            throws IOException;
+    void run(String recordsFilename, String agesAndGendersFilename, String collaboratorsFilename)
+            throws IOException, IllegalAccessException, NoSuchFieldException, SQLException, ClassNotFoundException, InstantiationException;
 }

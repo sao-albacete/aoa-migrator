@@ -2,10 +2,12 @@ package org.sao.aoa.migrator.beans;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Properties;
+
+import static org.sao.aoa.migrator.utils.DateUtils.DATE_FORMAT;
 
 /**
  * Class Cita
@@ -15,10 +17,8 @@ import java.util.Properties;
  */
 public class Cita {
 
-    private DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
     private Integer id98;
-    private LocalDate fecha;
+    private Timestamp fecha;
     private Integer cantidad;
     private String observaciones;
     private Boolean seleccionada;
@@ -61,11 +61,11 @@ public class Cita {
                 String fieldValue = (String) values.get(mapKey);
 
                 if (field.getType() == Integer.class) {
-                    field.set(this, Integer.valueOf(fieldValue));
+                    field.set(this, Double.valueOf(fieldValue).intValue());
                 } else if (field.getType() == String.class) {
                     field.set(this, fieldValue);
-                } else if (field.getType() == LocalDate.class) {
-                    field.set(this, LocalDate.parse(fieldValue, this.dateFormat));
+                } else if (field.getType() == Timestamp.class) {
+                    field.set(this, Timestamp.valueOf(fieldValue));
                 } else if (field.getType() == Boolean.class) {
                     field.set(this, Boolean.valueOf(fieldValue));
                 }
@@ -77,7 +77,7 @@ public class Cita {
         return id98;
     }
 
-    public LocalDate getFecha() {
+    public Timestamp getFecha() {
         return fecha;
     }
 

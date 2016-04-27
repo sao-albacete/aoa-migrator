@@ -5,6 +5,7 @@
 # IntelliJ specific files
 .idea
 *.iml
+*.xls
 
 /target
 /out
