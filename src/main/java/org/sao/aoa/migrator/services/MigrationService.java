@@ -63,6 +63,7 @@ public class MigrationService implements MigrationServiceInterface {
 
         try {
             // Add a new field called "id_98" to the table "cita"
+            // TODO check if the column already exists before execute the alter table
             try {
                 create.alterTable(CITA).add("id98", SQLDataType.INTEGER.nullable(true)).execute();
             } catch (DataAccessException e) {
@@ -71,12 +72,11 @@ public class MigrationService implements MigrationServiceInterface {
                 }
             }
 
-
             // Insert records
             insertRecords(create, recordsData);
 
             // Get records with "id_98" field not empty and save in a Map object using "id_98" as key and "id" as value
-            Result<Record2<Integer, Integer>> recordsIds = create.select(CITA.ID, CITA.ID98).from(CITA).where(CITA.ID98.isNotNull()).fetch();
+            Result<Record2<Integer, Integer>> recordsIds = create.select(CITA.ID98, CITA.ID).from(CITA).where(CITA.ID98.isNotNull()).fetch();
             // Loop results and store the value of the field "id98" as key and the value of the field "id" as a
             // value in a Map object
             Map<Integer, Integer> recordIdsMap = new HashMap<>();
@@ -89,6 +89,9 @@ public class MigrationService implements MigrationServiceInterface {
             insertCollaborators(create, collaboratorsData, recordIdsMap);
             // Insert historic records
             // TODO Implement
+
+            // Remove the temporary field "id98"
+            create.alterTable(CITA).drop("id98").execute();
 
             conn.commit();
 
@@ -117,8 +120,6 @@ public class MigrationService implements MigrationServiceInterface {
 
             // Constructs beans using files data
             Cita cita = new Cita(citaData);
-
-            System.out.println("Fuente: " + cita.getFuente());
 
             // Insert data in "cita" table
             create.insertInto(CITA,
@@ -179,6 +180,8 @@ public class MigrationService implements MigrationServiceInterface {
      */
     private void insertAgeGender(DSLContext create, List<Map<String, Object>> ageAndGenderData, Map<Integer, Integer> recordIdsMap)
             throws IOException, IllegalAccessException, NoSuchFieldException {
+
+        // TODO Get the content of the table "cowctkq_clase_edad_sexo" and replace the code by the id
 
         // Loop edad-sexo data
         for (Map<String, Object> ageAndGender: ageAndGenderData) {

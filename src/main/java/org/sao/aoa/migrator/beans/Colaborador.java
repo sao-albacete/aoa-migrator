@@ -38,7 +38,7 @@ public class Colaborador {
                 String fieldValue = (String)values.get(mapKey);
 
                 if (field.getType() == Integer.class) {
-                    field.set(this, Integer.valueOf(fieldValue));
+                    field.set(this, Double.valueOf(fieldValue).intValue());
                 }
             }
         }

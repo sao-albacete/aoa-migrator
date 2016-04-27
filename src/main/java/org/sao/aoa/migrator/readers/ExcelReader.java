@@ -90,31 +90,35 @@ public class ExcelReader implements ExcelReaderInterface {
         Map<String, Object> values = new HashMap<>();
 
         // For each row, iterate through all the columns
-        row.getPhysicalNumberOfCells();
-        Iterator<Cell> cellIterator = row.iterator();
-
-        for (int i = 0; cellIterator.hasNext(); i++)
+        int firstCellNum = row.getFirstCellNum();
+        int lastCellNum = row.getLastCellNum();
+        for (int i = firstCellNum; i < lastCellNum; i++)
         {
-            Cell cell = cellIterator.next();
-            switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_BOOLEAN:
-                    values.put(header.get(i), String.valueOf(cell.getBooleanCellValue()));
-                    break;
-                case Cell.CELL_TYPE_NUMERIC:
-                    double cellValue = cell.getNumericCellValue();
-                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
-                        // Format in form of M/D/YY
-                        Timestamp date = new Timestamp(HSSFDateUtil.getJavaDate(cellValue).getTime());
-                        values.put(header.get(i), date.toString());
-                    } else {
-                        values.put(header.get(i), String.valueOf(cellValue));
-                    }
-                    break;
-                case Cell.CELL_TYPE_BLANK:
-                case Cell.CELL_TYPE_STRING:
-                default:
-                    values.put(header.get(i), cell.getStringCellValue());
+            Cell cell = row.getCell(i);
+            String cellValue = null;
+            if (cell != null) {
+                switch (cell.getCellType()) {
+                    case Cell.CELL_TYPE_BOOLEAN:
+                        cellValue = String.valueOf(cell.getBooleanCellValue());
+                        break;
+                    case Cell.CELL_TYPE_NUMERIC:
+                        double cellDoubleValue = cell.getNumericCellValue();
+                        if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                            // Format in form of M/D/YY
+                            Timestamp date = new Timestamp(HSSFDateUtil.getJavaDate(cellDoubleValue).getTime());
+                            cellValue = date.toString();
+                        } else {
+                            cellValue = String.valueOf(cellDoubleValue);
+                        }
+                        break;
+                    case Cell.CELL_TYPE_BLANK:
+                    case Cell.CELL_TYPE_STRING:
+                    default:
+                        cellValue = cell.getStringCellValue();
+                }
             }
+
+            values.put(header.get(i), cellValue);
         }
 
         return values;
