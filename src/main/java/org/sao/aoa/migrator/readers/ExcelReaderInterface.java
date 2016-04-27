@@ -19,5 +19,5 @@ public interface ExcelReaderInterface {
      * @return List
      * @throws IOException
      */
-    List<Map> read(String filename) throws IOException;
+    List<Map<String, Object>> read(String filename) throws IOException;
 }

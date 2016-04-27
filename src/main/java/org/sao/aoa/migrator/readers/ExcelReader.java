@@ -19,9 +19,9 @@ import java.util.*;
 public class ExcelReader implements ExcelReaderInterface {
 
     @Override
-    public List<Map> read(String filename) throws IOException {
+    public List<Map<String, Object>> read(String filename) throws IOException {
 
-        List<Map> content = new ArrayList<>();
+        List<Map<String, Object>> content = new ArrayList<>();
 
         try (InputStream citasInputStream = new FileInputStream(new File(filename))) {
 
