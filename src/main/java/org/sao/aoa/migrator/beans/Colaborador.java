@@ -1,5 +1,6 @@
 package org.sao.aoa.migrator.beans;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class Colaborador {
     private Integer id98;
     private Integer colaboradorId;
 
-    public Colaborador(Map<String, Object> values) throws Exception {
+    public Colaborador(Map<String, Object> values) throws IOException, IllegalAccessException, NoSuchFieldException {
 
         if (values == null || values.isEmpty()) {
             return;
@@ -49,6 +50,10 @@ public class Colaborador {
 
     public Integer getColaboradorId() {
         return colaboradorId;
+    }
+
+    public void replaceCitaId(Integer newId) {
+        this.id98 = newId;
     }
 
     @Override

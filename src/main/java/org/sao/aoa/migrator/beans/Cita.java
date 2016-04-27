@@ -1,5 +1,6 @@
 package org.sao.aoa.migrator.beans;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -38,7 +39,7 @@ public class Cita {
     private Integer privacidadId;
     private Boolean foto;
 
-    public Cita(Map<String, Object> values) throws Exception {
+    public Cita(Map<String, Object> values) throws IOException, IllegalAccessException, NoSuchFieldException {
 
         if (values == null || values.isEmpty()) {
             return;
@@ -46,17 +47,18 @@ public class Cita {
 
         // Load cita fields mapping properties
         Properties fieldsMapping = new Properties();
+
         fieldsMapping.load(this.getClass().getResourceAsStream("/mapping/cita-fields-mapping.properties"));
 
         Class cita = this.getClass();
 
         for (Object key : fieldsMapping.keySet()) {
-            String fieldName = (String)key;
+            String fieldName = (String) key;
             String mapKey = fieldsMapping.getProperty(fieldName);
 
             if (values.containsKey(mapKey)) {
                 Field field = cita.getDeclaredField(fieldName);
-                String fieldValue = (String)values.get(mapKey);
+                String fieldValue = (String) values.get(mapKey);
 
                 if (field.getType() == Integer.class) {
                     field.set(this, Integer.valueOf(fieldValue));

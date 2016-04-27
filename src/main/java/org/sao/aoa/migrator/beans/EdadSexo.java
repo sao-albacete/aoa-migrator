@@ -1,5 +1,6 @@
 package org.sao.aoa.migrator.beans;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Properties;
@@ -16,7 +17,7 @@ public class EdadSexo {
     private Integer claseId;
     private Integer cantidad;
 
-    public EdadSexo(Map<String, Object> values) throws Exception {
+    public EdadSexo(Map<String, Object> values) throws IOException, IllegalAccessException, NoSuchFieldException {
 
         if (values == null || values.isEmpty()) {
             return;
@@ -53,6 +54,10 @@ public class EdadSexo {
 
     public Integer getCantidad() {
         return cantidad;
+    }
+
+    public void replaceCitaId(Integer newId) {
+        this.id98 = newId;
     }
 
     @Override
