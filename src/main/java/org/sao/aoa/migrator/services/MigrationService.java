@@ -84,7 +84,8 @@ public class MigrationService implements MigrationServiceInterface {
                 recordIdsMap.put((Integer)rec.value1(), (Integer)rec.value2());
             }
             // Insert ages and genders
-            insertAgeGender(create, agesAndGendersData, recordIdsMap);
+            // TODO Uncomment
+//            insertAgeGender(create, agesAndGendersData, recordIdsMap);
             // Insert collaborators
             insertCollaborators(create, collaboratorsData, recordIdsMap);
             // Insert historic records

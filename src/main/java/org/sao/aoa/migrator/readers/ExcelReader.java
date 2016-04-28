@@ -118,6 +118,7 @@ public class ExcelReader implements ExcelReaderInterface {
                 }
             }
 
+            // TODO Trim String value and remove bad characters
             values.put(header.get(i), cellValue);
         }
 
