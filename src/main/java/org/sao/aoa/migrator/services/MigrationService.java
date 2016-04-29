@@ -2,21 +2,23 @@ package org.sao.aoa.migrator.services;
 
 import com.google.inject.Inject;
 import org.apache.commons.lang3.BooleanUtils;
-import org.jooq.*;
+import org.jooq.DSLContext;
+import org.jooq.Record2;
+import org.jooq.Result;
+import org.jooq.SQLDialect;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.sao.aoa.migrator.beans.Cita;
 import org.sao.aoa.migrator.beans.Colaborador;
 import org.sao.aoa.migrator.beans.EdadSexo;
+import org.sao.aoa.migrator.model.AnuarioSchema;
 import org.sao.aoa.migrator.readers.ExcelReaderInterface;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +86,7 @@ public class MigrationService implements MigrationServiceInterface {
                 recordIdsMap.put((Integer)rec.value1(), (Integer)rec.value2());
             }
             // Insert ages and genders
-            // TODO Uncomment
+            // TODO uncomment
 //            insertAgeGender(create, agesAndGendersData, recordIdsMap);
             // Insert collaborators
             insertCollaborators(create, collaboratorsData, recordIdsMap);
@@ -182,7 +184,7 @@ public class MigrationService implements MigrationServiceInterface {
     private void insertAgeGender(DSLContext create, List<Map<String, Object>> ageAndGenderData, Map<Integer, Integer> recordIdsMap)
             throws IOException, IllegalAccessException, NoSuchFieldException {
 
-        // TODO Get the content of the table "cowctkq_clase_edad_sexo" and replace the code by the id
+        // TODO Get the content of the table "clase_edad_sexo" and replace the code by the id
 
         // Loop edad-sexo data
         for (Map<String, Object> ageAndGender: ageAndGenderData) {
@@ -255,11 +257,11 @@ public class MigrationService implements MigrationServiceInterface {
             ClassNotFoundException,
             SQLException {
 
-        Class.forName("com.mysql.jdbc.Driver").newInstance();
+        Class.forName(AnuarioSchema.getDriver()).newInstance();
         Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/anuario_bbdd",
-                "root",
-                "");
+                AnuarioSchema.getDatabaseUrl(),
+                AnuarioSchema.getUser(),
+                AnuarioSchema.getPassword());
         conn.setAutoCommit(autocommit);
         return conn;
     }

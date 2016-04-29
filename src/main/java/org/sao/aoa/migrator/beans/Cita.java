@@ -3,11 +3,8 @@ package org.sao.aoa.migrator.beans;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.Map;
 import java.util.Properties;
-
-import static org.sao.aoa.migrator.utils.DateUtils.DATE_FORMAT;
 
 /**
  * Class Cita
@@ -47,7 +44,6 @@ public class Cita {
 
         // Load cita fields mapping properties
         Properties fieldsMapping = new Properties();
-
         fieldsMapping.load(this.getClass().getResourceAsStream("/mapping/cita-fields-mapping.properties"));
 
         Class cita = this.getClass();
