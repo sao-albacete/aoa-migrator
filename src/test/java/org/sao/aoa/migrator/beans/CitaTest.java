@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class CitaTest {
 
         this.data = new HashMap<>();
         data.put("id_98", "1");
-        data.put("FECHA", "02/01/1998");
+        data.put("FECHA", Timestamp.valueOf("1998-02-01 00:00:00").toString());
         data.put("num", "30");
         data.put("OBSERVACIO", "Volando río arriba");
         data.put("selecc", "0");
@@ -53,7 +54,7 @@ public class CitaTest {
         Cita cita = new Cita(this.data);
 
         Assert.assertEquals(cita.getId98(), Integer.valueOf((String)this.data.get("id_98")));
-        Assert.assertEquals(cita.getFecha(), LocalDate.parse((String)this.data.get("FECHA"), this.dateFormat));
+        Assert.assertEquals(cita.getFecha(), Timestamp.valueOf((String)this.data.get("FECHA")));
         Assert.assertEquals(cita.getCantidad(), Integer.valueOf((String)this.data.get("num")));
         Assert.assertEquals(cita.getObservaciones(), this.data.get("OBSERVACIO"));
         Assert.assertEquals(cita.isSeleccionada(), Boolean.valueOf((String)this.data.get("selecc")));
