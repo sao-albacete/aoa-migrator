@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +70,7 @@ public class MigrationService implements MigrationServiceInterface {
             // TODO check if the column already exists before execute the alter table
             try {
                 create.alterTable(CITA).add("id98", SQLDataType.INTEGER.nullable(true)).execute();
+                create.alterTable(CITA).add("fechaCreacion", SQLDataType.TIMESTAMP.nullable(true)).execute();
             } catch (DataAccessException e) {
                 if (!e.getMessage().contains("Duplicate column name")) {
                     throw e;
@@ -86,8 +89,7 @@ public class MigrationService implements MigrationServiceInterface {
                 recordIdsMap.put((Integer)rec.value1(), (Integer)rec.value2());
             }
             // Insert ages and genders
-            // TODO uncomment
-//            insertAgeGender(create, agesAndGendersData, recordIdsMap);
+            insertAgeGender(create, agesAndGendersData, recordIdsMap);
             // Insert collaborators
             insertCollaborators(create, collaboratorsData, recordIdsMap);
             // Insert historic records
@@ -118,6 +120,8 @@ public class MigrationService implements MigrationServiceInterface {
     private void insertRecords(DSLContext create, List<Map<String, Object>> recordsData)
             throws IOException, IllegalAccessException, NoSuchFieldException {
 
+        Timestamp now = new Timestamp(new Date().getTime());
+
         // Loop citas data
         for (Map<String, Object> citaData : recordsData) {
 
@@ -145,7 +149,8 @@ public class MigrationService implements MigrationServiceInterface {
                     CITA.IMPORTANCIA_CITA_ID,
                     CITA.ESTUDIO_ID,
                     CITA.INDPRIVACIDAD,
-                    CITA.INDFOTO)
+                    CITA.INDFOTO,
+                    CITA.FECHACREACION)
                     .values(
                             cita.getId98(),
                             cita.getFecha(),
@@ -166,7 +171,8 @@ public class MigrationService implements MigrationServiceInterface {
                             cita.getImportanciaCitaId(),
                             cita.getEstudioId(),
                             (byte)cita.getPrivacidadId().intValue(),
-                            (byte)(BooleanUtils.isTrue(cita.isFoto()) ? 1 : 0)
+                            (byte)(BooleanUtils.isTrue(cita.isFoto()) ? 1 : 0),
+                            now
                     ).execute();
         }
     }
@@ -183,8 +189,6 @@ public class MigrationService implements MigrationServiceInterface {
      */
     private void insertAgeGender(DSLContext create, List<Map<String, Object>> ageAndGenderData, Map<Integer, Integer> recordIdsMap)
             throws IOException, IllegalAccessException, NoSuchFieldException {
-
-        // TODO Get the content of the table "clase_edad_sexo" and replace the code by the id
 
         // Loop edad-sexo data
         for (Map<String, Object> ageAndGender: ageAndGenderData) {

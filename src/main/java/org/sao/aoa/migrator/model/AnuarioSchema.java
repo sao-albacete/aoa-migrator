@@ -33,7 +33,7 @@ public class AnuarioSchema extends SchemaImpl {
 			fieldsMapping.load(AnuarioSchema.class.getResourceAsStream("/database.properties"));
             schemaName = fieldsMapping.getProperty("jdbc.database.name");
             tablePrefix = fieldsMapping.getProperty("jdbc.database.tables.prefix");
-			databaseUrl = fieldsMapping.getProperty("jdbc.database.tables.prefix");
+			databaseUrl = fieldsMapping.getProperty("jdbc.url");
             user = fieldsMapping.getProperty("jdbc.user");
             password = fieldsMapping.getProperty("jdbc.password");
             driver = fieldsMapping.getProperty("jdbc.driver");
