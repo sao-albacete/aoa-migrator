@@ -1,6 +1,5 @@
 package org.sao.aoa.migrator.readers;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -9,9 +8,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -27,10 +28,10 @@ public class ExcelReader implements ExcelReaderInterface {
 
         List<Map<String, Object>> content = new ArrayList<>();
 
-        try (InputStream citasInputStream = this.getClass().getResourceAsStream(filename)) {
+        try (InputStream file = new FileInputStream(filename)) {
 
             // Create Workbook instance holding reference to .xls file
-            POIFSFileSystem fs = new POIFSFileSystem(citasInputStream);
+            POIFSFileSystem fs = new POIFSFileSystem(file);
             Workbook wb = new HSSFWorkbook(fs);
 
             // Get first/desired sheet from the workbook
