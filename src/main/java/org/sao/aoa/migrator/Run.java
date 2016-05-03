@@ -8,6 +8,8 @@ import org.sao.aoa.migrator.services.MigrationService;
 import org.sao.aoa.migrator.services.MigrationServiceInterface;
 import org.sao.aoa.migrator.services.modules.MigrationModule;
 
+import java.util.logging.LogManager;
+
 /**
  * Class Run
  *
@@ -15,6 +17,8 @@ import org.sao.aoa.migrator.services.modules.MigrationModule;
  * @link http://www.sao.albacete.org
  */
 public class Run {
+
+    static { LogManager.getLogManager().reset(); }
 
     public static void main(String[] args) {
 
@@ -54,7 +58,10 @@ public class Run {
             // Run migration
             Injector injector = Guice.createInjector(new MigrationModule());
             MigrationServiceInterface migrator = injector.getInstance(MigrationService.class);
+
+            System.out.println("STARTING process....");
             migrator.run(citasFilename, edadSexoCantidadFilename, colaboradoresFilename);
+            System.out.println("Process FINISHED successfully.");
 
         } catch (ParseException e) {
             System.err.println(e.getMessage());
