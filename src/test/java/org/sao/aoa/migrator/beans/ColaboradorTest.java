@@ -21,8 +21,8 @@ public class ColaboradorTest {
     public void setUp() {
 
         this.data = new HashMap<>();
-        data.put("id_98", "1");
-        data.put("id_observ", "92");
+        data.put("id_98", "1.0");
+        data.put("id_observ", "92.0");
     }
 
     @Test
@@ -30,7 +30,7 @@ public class ColaboradorTest {
 
         Colaborador colaborador = new Colaborador(this.data);
 
-        Assert.assertEquals(colaborador.getId98(), Integer.valueOf((String)this.data.get("id_98")));
-        Assert.assertEquals(colaborador.getColaboradorId(), Integer.valueOf((String)this.data.get("id_observ")));
+        Assert.assertEquals(colaborador.getId98(), Integer.valueOf(1));
+        Assert.assertEquals(colaborador.getColaboradorId(), Integer.valueOf(92));
     }
 }

@@ -18,7 +18,9 @@ import java.util.logging.LogManager;
  */
 public class Run {
 
-    static { LogManager.getLogManager().reset(); }
+    static {
+        LogManager.getLogManager().reset();
+    }
 
     public static void main(String[] args) {
 
@@ -36,22 +38,22 @@ public class Run {
             CommandLine cli = cliParser.parse(options, args);
 
             // If user has typed "h" or "help" show options
-            if (cli.hasOption("h")){
-                new HelpFormatter().printHelp(Run.class.getCanonicalName(), options );
+            if (cli.hasOption("h")) {
+                new HelpFormatter().printHelp(Run.class.getCanonicalName(), options);
                 return;
             }
 
             // Get filenames
-            String citasFilename =  cli.getOptionValue("citas");
-            if (citasFilename == null){
+            String citasFilename = cli.getOptionValue("citas");
+            if (citasFilename == null) {
                 throw new ParseException("El nombre del fichero de citas es obligatorio");
             }
-            String edadSexoCantidadFilename =  cli.getOptionValue("edadsexocantidad");
-            if (edadSexoCantidadFilename == null){
+            String edadSexoCantidadFilename = cli.getOptionValue("edadsexocantidad");
+            if (edadSexoCantidadFilename == null) {
                 throw new ParseException("El nombre del fichero de edad, sexo y cantidad de cada cita es obligatorio");
             }
-            String colaboradoresFilename =  cli.getOptionValue("colaboradores");
-            if (colaboradoresFilename == null){
+            String colaboradoresFilename = cli.getOptionValue("colaboradores");
+            if (colaboradoresFilename == null) {
                 throw new ParseException("El nombre del fichero de colaboradores de cada cita es obligatorio");
             }
 
@@ -59,9 +61,9 @@ public class Run {
             Injector injector = Guice.createInjector(new MigrationModule());
             MigrationServiceInterface migrator = injector.getInstance(MigrationService.class);
 
-            System.out.println("STARTING process....");
+            System.out.println("COMENZANDO el proceso....");
             migrator.run(citasFilename, edadSexoCantidadFilename, colaboradoresFilename);
-            System.out.println("Process FINISHED successfully.");
+            System.out.println("Proceso FINALIZADO con éxito.");
 
         } catch (ParseException e) {
             System.err.println(e.getMessage());

@@ -1,5 +1,8 @@
 package org.sao.aoa.migrator.beans;
 
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
@@ -59,11 +62,24 @@ public class Cita {
                 if (field.getType() == Integer.class) {
                     field.set(this, Double.valueOf(fieldValue).intValue());
                 } else if (field.getType() == String.class) {
-                    field.set(this, fieldValue);
+                    if (StringUtils.isBlank(fieldValue) || "null".equals(fieldValue)) {
+                        field.set(this, null);
+                    } else {
+                        field.set(this, fieldValue.trim());
+                    }
                 } else if (field.getType() == Timestamp.class) {
-                    field.set(this, Timestamp.valueOf(fieldValue));
+                    if (StringUtils.isBlank(fieldValue) || "null".equals(fieldValue)) {
+                        field.set(this, null);
+                    } else {
+                        field.set(this, Timestamp.valueOf(fieldValue));
+                    }
                 } else if (field.getType() == Boolean.class) {
-                    field.set(this, Boolean.valueOf(fieldValue));
+                    if (StringUtils.isBlank(fieldValue) || "null".equals(fieldValue)) {
+                        field.set(this, false);
+                    } else {
+                        int integerValue = (int) Float.parseFloat(fieldValue);
+                        field.set(this, BooleanUtils.toBoolean(integerValue));
+                    }
                 }
             }
         }

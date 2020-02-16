@@ -69,7 +69,9 @@ public class MigrationService implements MigrationServiceInterface {
             // Add a new field called "id_98" to the table "cita"
             // TODO check if the column already exists before execute the alter table
             try {
+                System.out.println("Añadiendo columna \"id98\" a la tabla cita...");
                 create.alterTable(CITA).add("id98", SQLDataType.INTEGER.nullable(true)).execute();
+                System.out.println("Añadiendo columna \"fechaCreacion\" a la tabla cita...");
                 create.alterTable(CITA).add("fechaCreacion", SQLDataType.TIMESTAMP.nullable(true)).execute();
             } catch (DataAccessException e) {
                 if (!e.getMessage().contains("Duplicate column name")) {
@@ -80,21 +82,25 @@ public class MigrationService implements MigrationServiceInterface {
             // Insert records
             insertRecords(create, recordsData);
 
+            System.out.println("Generando mapeo entre id del Excel y el de base de datos...");
             // Get records with "id_98" field not empty and save in a Map object using "id_98" as key and "id" as value
             Result<Record2<Integer, Integer>> recordsIds = create.select(CITA.ID98, CITA.ID).from(CITA).where(CITA.ID98.isNotNull()).fetch();
             // Loop results and store the value of the field "id98" as key and the value of the field "id" as a
             // value in a Map object
             Map<Integer, Integer> recordIdsMap = new HashMap<>();
             for (Record2 rec : recordsIds) {
-                recordIdsMap.put((Integer)rec.value1(), (Integer)rec.value2());
+                recordIdsMap.put((Integer) rec.value1(), (Integer) rec.value2());
             }
+            System.out.println("Insertando edades y sexos de cada cita...");
             // Insert ages and genders
             insertAgeGender(create, agesAndGendersData, recordIdsMap);
+            System.out.println("Insertando colaboradores...");
             // Insert collaborators
             insertCollaborators(create, collaboratorsData, recordIdsMap);
             // Insert historic records
             // TODO Implement
 
+            System.out.println("Eliminando campo temporal \"id98\"...");
             // Remove the temporary field "id98"
             create.alterTable(CITA).drop("id98").execute();
 
@@ -112,7 +118,7 @@ public class MigrationService implements MigrationServiceInterface {
      * Insert records
      *
      * @param recordsData List of records data
-     * @param create DSLContext
+     * @param create      DSLContext
      * @throws IOException
      * @throws IllegalAccessException
      * @throws NoSuchFieldException
@@ -128,52 +134,61 @@ public class MigrationService implements MigrationServiceInterface {
             // Constructs beans using files data
             Cita cita = new Cita(citaData);
 
-            // Insert data in "cita" table
-            create.insertInto(CITA,
-                    CITA.ID98,
-                    CITA.FECHAALTA,
-                    CITA.CANTIDAD,
-                    CITA.OBSERVACIONES,
-                    CITA.INDSELECCIONADA,
-                    CITA.LUGAR_ID,
-                    CITA.OBSERVADOR_PRINCIPAL_ID,
-                    CITA.CLASE_REPRODUCCION_ID,
-                    CITA.FUENTE_ID,
-                    CITA.INDHABITATRARO,
-                    CITA.INDCRIAHABITATRARO,
-                    CITA.INDHERIDO,
-                    CITA.INDCOMPORTAMIENTO,
-                    CITA.ESPECIE_ID,
-                    CITA.CRITERIO_SELECCION_CITA_ID,
-                    CITA.INDACTIVO,
-                    CITA.IMPORTANCIA_CITA_ID,
-                    CITA.ESTUDIO_ID,
-                    CITA.INDPRIVACIDAD,
-                    CITA.INDFOTO,
-                    CITA.FECHACREACION)
-                    .values(
-                            cita.getId98(),
-                            cita.getFecha(),
-                            cita.getCantidad(),
-                            cita.getObservaciones(),
-                            (byte)(cita.isSeleccionada() ? 1 : 0),
-                            cita.getLugarId(),
-                            cita.getObservadorId(),
-                            cita.getClaseReproduccionId(),
-                            cita.getFuente(),
-                            (byte)(BooleanUtils.isTrue(cita.isHabitatRaro()) ? 1 : 0),
-                            (byte)(BooleanUtils.isTrue(cita.isCriaEnHabitatRaro()) ? 1 : 0),
-                            (byte)(BooleanUtils.isTrue(cita.isHerido()) ? 1 : 0),
-                            (byte)(BooleanUtils.isTrue(cita.isComportamientoRaro()) ? 1 : 0),
-                            cita.getEspecieId(),
-                            cita.getCriterioSeleccionId(),
-                            (byte)(BooleanUtils.isTrue(cita.isActivo()) ? 1 : 0),
-                            cita.getImportanciaCitaId(),
-                            cita.getEstudioId(),
-                            (byte)cita.getPrivacidadId().intValue(),
-                            (byte)(BooleanUtils.isTrue(cita.isFoto()) ? 1 : 0),
-                            now
-                    ).execute();
+            System.out.println("Insertando fila " + cita.getId98() + "...");
+
+            try {
+
+                // Insert data in "cita" table
+                create.insertInto(CITA,
+                        CITA.ID98,
+                        CITA.FECHAALTA,
+                        CITA.CANTIDAD,
+                        CITA.OBSERVACIONES,
+                        CITA.INDSELECCIONADA,
+                        CITA.LUGAR_ID,
+                        CITA.OBSERVADOR_PRINCIPAL_ID,
+                        CITA.CLASE_REPRODUCCION_ID,
+                        CITA.FUENTE_ID,
+                        CITA.INDHABITATRARO,
+                        CITA.INDCRIAHABITATRARO,
+                        CITA.INDHERIDO,
+                        CITA.INDCOMPORTAMIENTO,
+                        CITA.ESPECIE_ID,
+                        CITA.CRITERIO_SELECCION_CITA_ID,
+                        CITA.INDACTIVO,
+                        CITA.IMPORTANCIA_CITA_ID,
+                        CITA.ESTUDIO_ID,
+                        CITA.INDPRIVACIDAD,
+                        CITA.INDFOTO,
+                        CITA.FECHACREACION)
+                        .values(
+                                cita.getId98(),
+                                cita.getFecha(),
+                                cita.getCantidad(),
+                                cita.getObservaciones(),
+                                (byte) (cita.isSeleccionada() ? 1 : 0),
+                                cita.getLugarId(),
+                                cita.getObservadorId(),
+                                cita.getClaseReproduccionId(),
+                                cita.getFuente(),
+                                (byte) (BooleanUtils.isTrue(cita.isHabitatRaro()) ? 1 : 0),
+                                (byte) (BooleanUtils.isTrue(cita.isCriaEnHabitatRaro()) ? 1 : 0),
+                                (byte) (BooleanUtils.isTrue(cita.isHerido()) ? 1 : 0),
+                                (byte) (BooleanUtils.isTrue(cita.isComportamientoRaro()) ? 1 : 0),
+                                cita.getEspecieId(),
+                                cita.getCriterioSeleccionId(),
+                                (byte) (BooleanUtils.isTrue(cita.isActivo()) ? 1 : 0),
+                                cita.getImportanciaCitaId(),
+                                cita.getEstudioId(),
+                                (byte) cita.getPrivacidadId().intValue(),
+                                (byte) (BooleanUtils.isTrue(cita.isFoto()) ? 1 : 0),
+                                now
+                        ).execute();
+
+            } catch (Exception e) {
+                System.out.println("Hubo un error inseperado insertando la cita " + cita);
+                throw e;
+            }
         }
     }
 
@@ -181,8 +196,8 @@ public class MigrationService implements MigrationServiceInterface {
      * Insert age and sex
      *
      * @param ageAndGenderData List of age-sex data
-     * @param create DSLContext
-     * @param recordIdsMap Map with old and new record id
+     * @param create           DSLContext
+     * @param recordIdsMap     Map with old and new record id
      * @throws IOException
      * @throws IllegalAccessException
      * @throws NoSuchFieldException
@@ -191,7 +206,7 @@ public class MigrationService implements MigrationServiceInterface {
             throws IOException, IllegalAccessException, NoSuchFieldException {
 
         // Loop edad-sexo data
-        for (Map<String, Object> ageAndGender: ageAndGenderData) {
+        for (Map<String, Object> ageAndGender : ageAndGenderData) {
 
             // Constructs beans using files data
             EdadSexo edadSexo = new EdadSexo(ageAndGender);
@@ -216,8 +231,8 @@ public class MigrationService implements MigrationServiceInterface {
      * Insert collaborators
      *
      * @param collaboratorsData List of collaborators data
-     * @param create DSLContext
-     * @param recordIdsMap Map with old and new record id
+     * @param create            DSLContext
+     * @param recordIdsMap      Map with old and new record id
      * @throws IOException
      * @throws IllegalAccessException
      * @throws NoSuchFieldException
@@ -262,6 +277,7 @@ public class MigrationService implements MigrationServiceInterface {
             SQLException {
 
         Class.forName(AnuarioSchema.getDriver()).newInstance();
+        System.out.println("Conectando con la base de datos " + AnuarioSchema.getDatabaseUrl() + " a través del usuario " + AnuarioSchema.getUser() + "...");
         Connection conn = DriverManager.getConnection(
                 AnuarioSchema.getDatabaseUrl(),
                 AnuarioSchema.getUser(),

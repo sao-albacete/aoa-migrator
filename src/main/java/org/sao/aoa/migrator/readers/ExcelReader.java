@@ -26,6 +26,8 @@ public class ExcelReader implements ExcelReaderInterface {
     @Override
     public List<Map<String, Object>> read(String filename) throws IOException {
 
+        System.out.println("Leyendo fichero " + filename + "...");
+
         List<Map<String, Object>> content = new ArrayList<>();
 
         try (InputStream file = new FileInputStream(filename)) {

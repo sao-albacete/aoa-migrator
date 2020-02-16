@@ -21,9 +21,9 @@ public class EdadSexoTest {
     public void setUp() {
 
         this.data = new HashMap<>();
-        data.put("id_98", "1");
-        data.put("clase_id", "3");
-        data.put("numero", "1");
+        data.put("id_98", "1.0");
+        data.put("clase_id", "3.0");
+        data.put("numero", "12.0");
     }
 
     @Test
@@ -31,8 +31,8 @@ public class EdadSexoTest {
 
         EdadSexo edadSexo = new EdadSexo(this.data);
 
-        Assert.assertEquals(edadSexo.getId98(), Integer.valueOf((String)this.data.get("id_98")));
-        Assert.assertEquals(edadSexo.getClaseId(), Integer.valueOf((String)this.data.get("clase_id")));
-        Assert.assertEquals(edadSexo.getCantidad(), Integer.valueOf((String)this.data.get("numero")));
+        Assert.assertEquals(edadSexo.getId98(), Integer.valueOf(1));
+        Assert.assertEquals(edadSexo.getClaseId(), Integer.valueOf(3));
+        Assert.assertEquals(edadSexo.getCantidad(), Integer.valueOf(12));
     }
 }
