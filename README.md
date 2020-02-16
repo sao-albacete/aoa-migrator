@@ -5,7 +5,7 @@ Esta es una herramienta Java para migrar citas antiguas desde un fichero Excel a
 * Java (version >=1.7)
 
 ## Preparación del fichero JAR ejecutable
-Crear el fichero _build.properties_ en el directorio raíz del proyecto con los datos de conexión de base de datos. El contenido del fichero deberá ser el siguiente:
+Crear el fichero _build.properties_ en el directorio _src/main/resources_ del proyecto con los datos de conexión de base de datos. El contenido del fichero deberá ser el siguiente:
 <pre>
 jdbc.driver=com.mysql.jdbc.Driver
 jdbc.user=user
