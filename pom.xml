@@ -17,7 +17,7 @@
         <jdk.version>1.7</jdk.version>
         <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
         <org.jooq.version>3.7.3</org.jooq.version>
-        <mysql.version>5.1.38</mysql.version>
+        <mysql.version>8.0.16</mysql.version>
     </properties>
 
     <profiles>
